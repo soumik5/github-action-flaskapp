@@ -58,7 +58,7 @@ jobs:
     steps:
       - name: login to ec2 and run docker container
         run: |
-          ssh -o "StrictHostKeyChecking=no" -i {{ secrets.EC2_SSH_KEY}} ubuntu@${{ secrets.EC2_HOST}} \
+          ssh -o "StrictHostKeyChecking=no" -i $git{{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_HOST }} \
           "
           docker pull ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
           docker stop weather-flask-container
