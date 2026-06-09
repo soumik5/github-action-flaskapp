@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: buildjob
     steps:
-      - name: Fingerprint
+      - name: generate the ssh key file from github secrets as -i need pem file to login to ec2
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
