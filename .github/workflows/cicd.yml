@@ -61,15 +61,11 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
           ssh-keygen -lf key.pem
-          
+
       - name: deploy the docker image to my ec2
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
-            docker stop weather-flask-container || true
-            docker rm weather-flask-container || true
-            docker run -d --name weather-flask-container -p 80:5000 ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
+        run: |
+          ssh -vvv \
+          -o StrictHostKeyChecking=no \
+          -i key.pem \
+          ubuntu@${{ secrets.EC2_HOST }} \
+          "hostname"
