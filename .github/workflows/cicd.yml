@@ -62,10 +62,18 @@ jobs:
           chmod 600 key.pem
           ssh-keygen -lf key.pem
 
-      - name: deploy the docker image to my ec2
+      - name: login to my ec2
         run: |
-          ssh -vvv \
-          -o StrictHostKeyChecking=no \
-          -i key.pem \
-          ubuntu@${{ secrets.EC2_HOST }} \
-          "hostname"
+          ssh -o "StrictHostKeyChecking=no" -i {{ secrets.EC2_SSH_KEY}} ubuntu@${{ secrets.EC@_HOST}}
+        
+      - name: run docker container
+        run: |
+          ssh -o "StrictHostKeyChecking=no" -i {{ secrets.EC2_SSH_KEY}} ubuntu@${{ secrets.EC2_HOST}} \
+          "
+          docker pull ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
+          docker stop weather-flask-container
+          docker rm weather-flask-container
+          docker run -d --name weather-flask-container -p 80:5000 ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
+          
+          "
+         
