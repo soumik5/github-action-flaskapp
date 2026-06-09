@@ -56,6 +56,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: buildjob
     steps:
+      - name: Fingerprint
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+          ssh-keygen -lf key.pem
+          
       - name: deploy the docker image to my ec2
         uses: appleboy/ssh-action@v1.2.0
         with:
