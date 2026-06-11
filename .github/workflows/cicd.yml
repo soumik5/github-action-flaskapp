@@ -56,20 +56,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: buildjob
     steps:
-      - name: Fingerprint
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
-          chmod 600 key.pem
-          ssh-keygen -lf key.pem
-          
-      - name: deploy the docker image to my ec2
+      - name: setup ssh agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
-            docker stop weather-flask-container || true
-            docker rm weather-flask-container || true
-            docker run -d --name weather-flask-container -p 80:5000 ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+      
+      - name: deploy the docker image to my ec2 and run the container
+        run: |
+          ssh -o "strictHostKeyChecking=no" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} /
+          "
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
+          sudo docker stop mycontainer
+          sudo docker rm mycontainer
+          sudo docker run -d --name mycontainer -p 5000:5000 ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
+          "
