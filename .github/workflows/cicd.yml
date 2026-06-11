@@ -63,7 +63,7 @@ jobs:
       
       - name: deploy the docker image to my ec2 and run the container
         run: |
-          ssh -o strictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} /
+          ssh -o "strictHostKeyChecking=no" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
           "
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/weather-flask-app:version1
           sudo docker stop mycontainer
